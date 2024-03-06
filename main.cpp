@@ -30,14 +30,18 @@ int bitAnd(int x, int y)
 // 1.2
 int negative(int x)
 {
-
+// Muốn tìm số âm của số nguyên x: ta dùng bù 2 ( bù 1 + 1)
 	return ~x + 1;
 }
 
 // 1.3
 int getByte(int x, int n)
 {
-	return (x >> (n * 8)) & 0xFF;
+    // dịch phải là : 2^n
+    // dịch trái là x 2^n 
+    // ta nhân số n (0<= n <= 3) với 2^3 rồi dịch phải số nguyên x với n.2^3 bit 
+    // and kết quả với 0xFF để loại bỏ phần tử không cần thiết 
+	return (x >> (n << 3)) & 0xFF;
 }
 
 // 1.4
