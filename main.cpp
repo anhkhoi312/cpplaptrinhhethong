@@ -59,8 +59,12 @@ int getnbit(int x, int n)
 // 1.5
 int mulpw2(int x, int n)
 {
-	
-	return x>>(~n+1);
+	int sign = (n >> 31 ) & 1;
+	int absN =(n ^ sign) - sign;
+	int result  = (x << absN) >> sign; // Nếu n dương, dịch sang trái, ngược lại dịch sang phải
+
+    return result;
+	//return x>>(~n+1);
 	//n âm
 	// chuyển thành n dương bằng cách bù 2 rồi dịch bit của số nguyên x sang phải-tương ứng phép chia
 
