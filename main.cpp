@@ -59,7 +59,10 @@ int getnbit(int x, int n)
 // 1.5
 int mulpw2(int x, int n)
 {
-	return 0;
+	int m=negative(n);
+	return x>>m;
+	//n âm
+	// chuyển thành n dương với hàm negative có sẵn rồi dịch bit sang phải-tương ứng phép chia
 }
 
 
