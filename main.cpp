@@ -30,7 +30,8 @@ int bitAnd(int x, int y)
 // 1.2
 int negative(int x)
 {
-	return 0;
+
+	return ~x + 1;
 }
 
 // 1.3
