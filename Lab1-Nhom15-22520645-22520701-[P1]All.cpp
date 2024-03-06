@@ -40,8 +40,8 @@ int getByte(int x, int n)
     /* chuyển byte cần lấy về cuối để dễ lấy ( AND 0xFF )
 	 lấy byte thứ n thì dịch byte sang phải n lần
 	 vd:lấy byte thứ 1 cần dịch phải 1 lần tức qua 8 bit -> (1<<3)=1*2^3=8
-		  			   2 			   2             16 bit ->(2<<3)=2*2^3=16
-					   ->(n<<3)
+		lấy byte thứ 2 cần dịch phải 2 lần tức qua 16 bit ->(2<<3)=2*2^3=16
+					   ->cần dịch phải (n<<3) bit
 	*/
 	return (x >> (n << 3)) & 0xFF;
 }
@@ -70,7 +70,13 @@ int mulpw2(int x, int n)
 // 2.1
 int isSameSign(int x, int y)
 {
-	return 0;
+	int x_sign = (x >> 31) & 1; // Lấy bit dấu của x
+	int y_sign = (y >> 31) & 1; // Lấy bit dấu của y
+
+	// Sử dụng phép XOR để so sánh dấu,1 xor 0 =1 tức khác dấu sẽ trả về 1, ngược lại là 0, điều này trái với đề nên cần dùng NOT
+	return ~(x_sign ^ y_sign) +2; 
+	// +2 vì: not(0)=-1, -1+2=1->cùng dấu
+	//		  not(1)=-2, -2+2=0->trái dấu
 }
 
 // 2.2
