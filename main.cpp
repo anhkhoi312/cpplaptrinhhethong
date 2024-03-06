@@ -43,7 +43,13 @@ int getByte(int x, int n)
 // 1.4
 int getnbit(int x, int n)
 {
-	return 0;
+	return (x&(~(0xFFFFFFFF<<n)));
+	/*
+		dựa trên: x & 1 = x, để lấy n bit từ phải qua trái, Mask phải có số bit 1 từ phải qua trái bằng n, các bit còn lại là 0.
+		->dịch trái mask ban đầu sang trái n lần, nhưng khi dịch trái thì bit thêm vào sau là 0
+		->Dùng NOT(vd: ~(11100)=00011 với n=2)->mask ban đầu là 0xFFFFFFFF (32bit)
+
+	*/
 }
 
 // 1.5
