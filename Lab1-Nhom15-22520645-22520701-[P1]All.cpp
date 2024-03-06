@@ -37,10 +37,12 @@ int negative(int x)
 // 1.3
 int getByte(int x, int n)
 {
-    // dịch phải là : 2^n
-    // dịch trái là x 2^n 
-    // ta nhân số n (0<= n <= 3) với 2^3 rồi dịch phải số nguyên x với n.2^3 bit 
-    // and kết quả với 0xFF để loại bỏ phần tử không cần thiết 
+    /* chuyển byte cần lấy về cuối để dễ lấy ( AND 0xFF )
+	 lấy byte thứ n thì dịch byte sang phải n lần
+	 vd:lấy byte thứ 1 cần dịch phải 1 lần tức qua 8 bit -> (1<<3)=1*2^3=8
+		  			   2 			   2             16 bit ->(2<<3)=2*2^3=16
+					   ->(n<<3)
+	*/
 	return (x >> (n << 3)) & 0xFF;
 }
 
