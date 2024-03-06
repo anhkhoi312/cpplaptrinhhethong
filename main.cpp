@@ -62,7 +62,8 @@ int mulpw2(int x, int n)
 	
 	return x>>(~n+1);
 	//n âm
-	// chuyển thành n dương với hàm negative có sẵn rồi dịch bit sang phải-tương ứng phép chia
+	// chuyển thành n dương bằng cách bù 2 rồi dịch bit của số nguyên x sang phải-tương ứng phép chia
+
 }
 
 
