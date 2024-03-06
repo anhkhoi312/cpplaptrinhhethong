@@ -37,7 +37,7 @@ int negative(int x)
 // 1.3
 int getByte(int x, int n)
 {
-	return 0;
+	return (x >> (n * 8)) & 0xFF;
 }
 
 // 1.4
