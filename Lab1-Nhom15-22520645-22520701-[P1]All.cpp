@@ -82,7 +82,9 @@ int isSameSign(int x, int y)
 // 2.2
 int is8x(int x)
 {
-	return 0;
+	 int x_sign = x & 0b111;
+	return x_sign ? 0 : 1;
+	
 }
 
 // 2.3
