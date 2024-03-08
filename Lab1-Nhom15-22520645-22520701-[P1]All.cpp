@@ -61,9 +61,15 @@ int getnbit(int x, int n)
 // 1.5
 int mulpw2(int x, int n)
 {
-	int isNegative = (n >> 31) & 1; // kiểm tra bit leftmost để biết n âm hay dương
-    return isNegative ? x >> (~n + 1) : x << n; // Nếu là số âm, dịch phải n bit(chuyển n thành số đối của nó), ngược lại dịch sang trái
+	 int isNegative = (n >> 31) & 1; // kiểm tra bit leftmost để biết n âm hay dương
+     return isNegative ? x >> (~n + 1) : x << n; // Nếu là số âm, dịch phải n bit(chuyển n thành số đối của nó), ngược lại dịch sang trái
+
+    //int isNegative = (n >> 31) & 1; // Kiểm tra bit leftmost để biết n âm hay dương
+
+    // Dịch phải x một số bit tương đương với số đối của n nếu n là số âm, ngược lại dịch sang trái n bit
+    //return (x >> ((~n + 1) & (isNegative))) | (x << (n & (~isNegative + 1)));
 }
+
 
 
 
@@ -82,8 +88,8 @@ int isSameSign(int x, int y)
 // 2.2
 int is8x(int x)
 {
-	 int x_sign = x & 0b111;
-	return x_sign ? 0 : 1;
+	int x_sign = x & 0b111;
+	return !(x_sign);
 	
 }
 
@@ -96,7 +102,14 @@ int isPositive(int x)
 // 2.4
 int isLess2n(int x, int y)
 {
-	return 0;
+	// int sign = x ^ (1<<y);
+	// int checksign = (sign>>31) & 1;
+	// return checksign;
+	//return !(x&(1<<y));
+	 int powerOfTwo = 1 << y;
+    // Dùng phép AND với số 2^n và kiểm tra xem kết quả có bằng số 2^n hay không
+    // Nếu bằng nhau, tức là x < 2^n, trả về 1; ngược lại, trả về 0
+    return !(x & powerOfTwo);
 }
 
 int main()
