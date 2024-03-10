@@ -53,7 +53,7 @@ int getnbit(int x, int n)
 	/*
 		dựa trên: x & 1 = x, để lấy n bit từ phải qua trái, Mask phải có số bit 1 từ phải qua trái bằng n, các bit còn lại là 0.
 		->dịch trái mask ban đầu sang trái n lần, nhưng khi dịch trái thì bit thêm vào sau là 0
-		->Dùng NOT(vd: ~(11100)=00011 với n=2)->mask ban đầu là 0xFFFFFFFF (32bit)
+		->Dùng NOT(vd: ~(11100)=00011 với n=2)->mask ban đầu là 0xFFFFFFFF 
 
 	*/
 }
@@ -61,13 +61,10 @@ int getnbit(int x, int n)
 // 1.5
 int mulpw2(int x, int n)
 {
-	 int isNegative = (n >> 31) & 1; // kiểm tra bit leftmost để biết n âm hay dương
-     return isNegative ? x >> (~n + 1) : x << n; // Nếu là số âm, dịch phải n bit(chuyển n thành số đối của nó), ngược lại dịch sang trái
-
-    //int isNegative = (n >> 31) & 1; // Kiểm tra bit leftmost để biết n âm hay dương
+	int isNegative = (n >> 31) & 1; // Kiểm tra bit leftmost để biết n âm hay dương
 
     // Dịch phải x một số bit tương đương với số đối của n nếu n là số âm, ngược lại dịch sang trái n bit
-    //return (x >> ((~n + 1) & (isNegative))) | (x << (n & (~isNegative + 1)));
+    return (x >> ((~n + 1) & (isNegative))) | (x << (n & (~isNegative + 1)));
 }
 
 
@@ -98,19 +95,29 @@ int is8x(int x)
 // 2.3
 int isPositive(int x)
 {
-	return 0;
+	/*
+		x dương thì in 1, ngược lại thì in 0
+		ý tưởng: dùng bit dấu
+		nếu x<0->bit dấu là 1, x>0->bit dấu là 0 => Lấy NOT bit dấu, nhưng ko thỏa với x=0
+		-> để ý kết quả sẽ trái với bit dấu nên có thể OR bit dấu của x với một số trái dấu,lấy bit dấu của kết quả. Vì cần 1 biểu thức có thể thỏa hết trường hợp nên số trái dấu cần tìm sẽ là số đối của x. Xét x=0, số đối của 0 là 0 nên kết quả trả về sẽ thỏa đề
+		
+	*/
+	int x_sign = (x >> 31) & 1; // Lấy bit dấu của x
+	int is_positive = ((x_sign | (~x + 1)) >> 31) & 1;
+	return is_positive;
 }
 
 // 2.4
 int isLess2n(int x, int y)
 {
-	
-	 int powerOfTwo = ~(1 << y) + 1; // 1 dịch phải y bit -> tạo ra 1 số mũ 2 bằng cách dịch trái số 1 đi y bit (2^y)
-	 // tính bù 2 của 1 << y 
-	 // thực hiện phép AND giữa x và bù 2 của 1 << y để kiểm tra xem kết quả có phải bằng 0 hay không
-	 // nếu kết quả của phép AND bằng 0, điều đó chỉ rằng không có bit 1 nào mà 2 số x và powerOfTwo ở cùng 1 bị trí
-    // kết quả sẽ trả về 0, dùng NOT(!) để phủ định kết quả, vậy kết quả trả về True khi x nhỏ hơn 2^y và ngược lại
-	return (!(x & powerOfTwo)) ;
+	// int sign = x ^ (1<<y);
+	// int checksign = (sign>>31) & 1;
+	// return checksign;
+	//return !(x&(1<<y));
+	 int powerOfTwo = 1 << y;
+    // Dùng phép AND với số 2^n và kiểm tra xem kết quả có bằng số 2^n hay không
+    // Nếu bằng nhau, tức là x < 2^n, trả về 1; ngược lại, trả về 0
+    return !(x & powerOfTwo);
 }
 
 int main()
