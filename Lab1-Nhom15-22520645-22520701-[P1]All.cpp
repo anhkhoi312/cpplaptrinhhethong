@@ -88,8 +88,10 @@ int isSameSign(int x, int y)
 // 2.2
 int is8x(int x)
 {
-	int x_sign = x & 0b111;
-	return !(x_sign);
+	int x_sign = x & 0b111; // thực hiện phép AND giữa x và số 7(111) mục đích là để lấy ra 3 số cuối 
+	// 1 số nguyên x có chia hết cho 8 hay không thì 3 bit cuối của số đó phải là 0 
+	return !(x_sign); // nếu x_sign = 0 (tức là 3 số cuối bằng 0 -> x chia hết cho 8) vậy thì !x_sign sẽ trả về giá trị true(=1)
+	// ngược lại sẽ trả về giá trị false(=0) nếu x_sign khác 0
 	
 }
 
@@ -102,14 +104,13 @@ int isPositive(int x)
 // 2.4
 int isLess2n(int x, int y)
 {
-	// int sign = x ^ (1<<y);
-	// int checksign = (sign>>31) & 1;
-	// return checksign;
-	//return !(x&(1<<y));
-	 int powerOfTwo = 1 << y;
-    // Dùng phép AND với số 2^n và kiểm tra xem kết quả có bằng số 2^n hay không
-    // Nếu bằng nhau, tức là x < 2^n, trả về 1; ngược lại, trả về 0
-    return !(x & powerOfTwo);
+	
+	 int powerOfTwo = ~(1 << y) + 1; // 1 dịch phải y bit -> tạo ra 1 số mũ 2 bằng cách dịch trái số 1 đi y bit (2^y)
+	 // tính bù 2 của 1 << y 
+	 // thực hiện phép AND giữa x và bù 2 của 1 << y để kiểm tra xem kết quả có phải bằng 0 hay không
+	 // nếu kết quả của phép AND bằng 0, điều đó chỉ rằng không có bit 1 nào mà 2 số x và powerOfTwo ở cùng 1 bị trí
+    // kết quả sẽ trả về 0, dùng NOT(!) để phủ định kết quả, vậy kết quả trả về True khi x nhỏ hơn 2^y và ngược lại
+	return (!(x & powerOfTwo)) ;
 }
 
 int main()
@@ -223,5 +224,5 @@ int main()
 		}
 	}
 
-	printf("\n\n\n");
+
 }
