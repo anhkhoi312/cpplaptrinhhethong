@@ -61,10 +61,19 @@ int getnbit(int x, int n)
 // 1.5
 int mulpw2(int x, int n)
 {
-	int isNegative = (n >> 31) & 1; // Kiểm tra bit leftmost để biết n âm hay dương
-
-    // Dịch phải x một số bit tương đương với số đối của n nếu n là số âm, ngược lại dịch sang trái n bit
-    return (x >> ((~n + 1) & (isNegative))) | (x << (n & (~isNegative + 1)));
+	/*
+		return ((x>>(~n+1))&y) | ((x<<n)&z) với lúc n âm thì y=0xFFFFFFFF,z=0x0; ngược lai thì y=0x0,z=0xFFFFFFFF
+		với y:
+		khi n âm thì bit dấu là 1->NOT bit dấu, mở rộng thành 32 bit bằng dịch trái, sau đó NOT lần nữa sẽ được y mong muốn
+		cách làm này ko thỏa với n không âm vì y tính ra là 0x7FFFFFFF-> OR tiếp với 0,y sẽ là 0x0. Với n âm tức y=0xFFFFFFFF thì khi OR với 0 sẽ không ảnh hưởng nên vẫn thỏa
+		với z:
+		khi âm thì bít dấu là 1->NOT bit dấu, mở rộng bằng dịch trái
+		tương tự cách làm này cũng không thỏa khi n không âm, z tính ra là 0x80000000->ta thấy nếu cộng với 0x7FFFFFFF thì sẽ được giá trị z mong muốn nhưng chỉ được cộng khi n không âm nên ta AND 0x7FFFFFFFF với NOT của bit dấu.
+		
+		Có thể có cách code clean hơn nhưng tạm thời chưa nghĩ ra.
+	*/
+	int isNegative = (n >> 31) & 1;
+    return ((x>>(~n+1))&((~(~isNegative<<31))|0)) | (((x << n)&((~isNegative<<31)+(0x7FFFFFFF&~isNegative))));
 }
 
 
