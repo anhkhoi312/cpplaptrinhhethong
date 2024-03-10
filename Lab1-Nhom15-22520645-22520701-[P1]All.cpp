@@ -110,14 +110,13 @@ int isPositive(int x)
 // 2.4
 int isLess2n(int x, int y)
 {
-	// int sign = x ^ (1<<y);
-	// int checksign = (sign>>31) & 1;
-	// return checksign;
-	//return !(x&(1<<y));
-	 int powerOfTwo = 1 << y;
-    // Dùng phép AND với số 2^n và kiểm tra xem kết quả có bằng số 2^n hay không
-    // Nếu bằng nhau, tức là x < 2^n, trả về 1; ngược lại, trả về 0
-    return !(x & powerOfTwo);
+	
+	 int powerOfTwo = ~(1 << y) + 1; // 1 dịch phải y bit -> tạo ra 1 số mũ 2 bằng cách dịch trái số 1 đi y bit (2^y)
+	 // tính bù 2 của 1 << y 
+	 // thực hiện phép AND giữa x và bù 2 của 1 << y để kiểm tra xem kết quả có phải bằng 0 hay không
+	 // nếu kết quả của phép AND bằng 0, điều đó chỉ rằng không có bit 1 nào mà 2 số x và powerOfTwo ở cùng 1 bị trí
+    // kết quả sẽ trả về 0, dùng NOT(!) để phủ định kết quả, vậy kết quả trả về True khi x nhỏ hơn 2^y và ngược lại
+	return (!(x & powerOfTwo)) ;
 }
 
 int main()
