@@ -102,8 +102,8 @@ int isPositive(int x)
 // 2.4
 int isLess2n(int x, int y)
 {
-	int powerOfTwo = (x>>y);
-	return !(powerOfTwo) ;
+	int x_after= (x>>y);
+	return !(x_after) ;
 }
 
 int main()
