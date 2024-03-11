@@ -90,7 +90,7 @@ int isSameSign(int x, int y)
 // 2.2
 int is8x(int x)
 {
-	int x_sign = x & 0b111; // lấy 3 bit cuối
+	int x_sign = x & 0b111; 
 	return !(x_sign); 
 }
 // 2.3
