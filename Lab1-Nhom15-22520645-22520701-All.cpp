@@ -67,65 +67,43 @@ int mulpw2(int x, int n)
 		khi n âm thì bit dấu là 1->NOT bit dấu, mở rộng thành 32 bit bằng dịch trái, sau đó NOT lần nữa sẽ được y mong muốn
 		cách làm này ko thỏa với n không âm vì y tính ra là 0x7FFFFFFF-> OR tiếp với 0,y sẽ là 0x0. Với n âm tức y=0xFFFFFFFF thì khi OR với 0 sẽ không ảnh hưởng nên vẫn thỏa
 		với z:
-		khi âm thì bít dấu là 1->NOT bit dấu, mở rộng bằng dịch trái
-		tương tự cách làm này cũng không thỏa khi n không âm, z tính ra là 0x80000000->ta thấy nếu cộng với 0x7FFFFFFF thì sẽ được giá trị z mong muốn nhưng chỉ được cộng khi n không âm nên ta AND 0x7FFFFFFFF với NOT của bit dấu.
-		
-		Có thể có cách code clean hơn nhưng tạm thời chưa nghĩ ra.
+		thay vì tìm một biểu thức mới để tính z, ta thấy giá trị của z trong mỗi trường hợp sẽ có liên hệ với y
+		-> z=y+0xFFFFFFFF (tuy y=0xFFFFFFFF thì sẽ gây ra tràn bit nhưng thu được z mong muốn)
 	*/
 	int isNegative = (n >> 31) & 1;
-    return ((x>>(~n+1))&((~(~isNegative<<31))|0)) | (((x << n)&((~isNegative<<31)+(0x7FFFFFFF&~isNegative))));
+	int y=(~(~isNegative<<31))|0;
+    return ((x>>(~n+1))&(y)) | ((x << n)&(y+0xFFFFFFFF));
 }
-
-
 
 
 // 2.1
 int isSameSign(int x, int y)
 {
-	int x_sign = (x >> 31) & 1; // Lấy bit dấu của x
-	int y_sign = (y >> 31) & 1; // Lấy bit dấu của y
+	int x_sign = (x >> 31) & 1; // Lấy bit dấu của x và y
+	int y_sign = (y >> 31) & 1;
 
-	// Sử dụng phép XOR để so sánh dấu,1 xor 0 =1 tức khác dấu sẽ trả về 1, ngược lại là 0, điều này trái với đề nên cần dùng NOT
-	return ~(x_sign ^ y_sign) +2; 
-	// +2 vì: not(0)=-1, -1+2=1->cùng dấu
-	//		  not(1)=-2, -2+2=0->trái dấu
+	//return ~(x_sign^y_sign) +2,  	
+	return !(x_sign ^ y_sign);
+	
 }
 
 // 2.2
 int is8x(int x)
 {
-	int x_sign = x & 0b111; // thực hiện phép AND giữa x và số 7(111) mục đích là để lấy ra 3 số cuối 
-	// 1 số nguyên x có chia hết cho 8 hay không thì 3 bit cuối của số đó phải là 0 
-	return !(x_sign); // nếu x_sign = 0 (tức là 3 số cuối bằng 0 -> x chia hết cho 8) vậy thì !x_sign sẽ trả về giá trị true(=1)
-	// ngược lại sẽ trả về giá trị false(=0) nếu x_sign khác 0
-	
+	int x_sign = x & 0b111; // lấy 3 bit cuối
+	return !(x_sign); 
 }
-
 // 2.3
 int isPositive(int x)
-{
-	/*
-		x dương thì in 1, ngược lại thì in 0
-		ý tưởng: dùng bit dấu
-		nếu x<0->bit dấu là 1, x>0->bit dấu là 0 => Lấy NOT bit dấu, nhưng ko thỏa với x=0
-		-> để ý kết quả sẽ trái với bit dấu nên có thể OR bit dấu của x với một số trái dấu,lấy bit dấu của kết quả. Vì cần 1 biểu thức có thể thỏa hết trường hợp nên số trái dấu cần tìm sẽ là số đối của x. Xét x=0, số đối của 0 là 0 nên kết quả trả về sẽ thỏa đề
-		
-	*/
-	int x_sign = (x >> 31) & 1; // Lấy bit dấu của x
-	int is_positive = ((x_sign | (~x + 1)) >> 31) & 1;
-	return is_positive;
+{	
+	return ((~x + 1) >> 31) & 1; 
 }
 
 // 2.4
 int isLess2n(int x, int y)
 {
-	
-	 int powerOfTwo = ~(1 << y) + 1; // 1 dịch phải y bit -> tạo ra 1 số mũ 2 bằng cách dịch trái số 1 đi y bit (2^y)
-	 // tính bù 2 của 1 << y 
-	 // thực hiện phép AND giữa x và bù 2 của 1 << y để kiểm tra xem kết quả có phải bằng 0 hay không
-	 // nếu kết quả của phép AND bằng 0, điều đó chỉ rằng không có bit 1 nào mà 2 số x và powerOfTwo ở cùng 1 bị trí
-    // kết quả sẽ trả về 0, dùng NOT(!) để phủ định kết quả, vậy kết quả trả về True khi x nhỏ hơn 2^y và ngược lại
-	return (!(x & powerOfTwo)) ;
+	int powerOfTwo = (x>>y);
+	return !(powerOfTwo) ;
 }
 
 int main()
